@@ -25,7 +25,7 @@ export default async function AssessmentsPage() {
             Manage and view your generated assessments
           </p>
         </div>
-        <Link href="/dashboard/teacher">
+        <Link href="/dashboard">
           <Button variant="outline">
             Back to Dashboard
           </Button>

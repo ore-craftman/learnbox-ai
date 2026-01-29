@@ -3,8 +3,8 @@
 import React from "react"
 
 import { useAuth } from '@/lib/auth-context';
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState, Suspense } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -18,10 +18,17 @@ import { NIGERIAN_SUBJECTS } from '@/lib/constants';
 
 const CLASSES = Object.keys(NIGERIAN_SUBJECTS);
 
-export default function TeacherDashboardPage() {
+function TeacherDashboardContent() {
   const { user, isLoading } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { toast } = useToast();
+
+  const [activeTab, setActiveTab] = useState('upload');
+
+  useEffect(() => {
+    setActiveTab(searchParams.get('tab') || 'upload');
+  }, [searchParams]);
 
   // Upload state
   const [uploadFile, setUploadFile] = useState<File | null>(null);
@@ -253,7 +260,15 @@ export default function TeacherDashboardPage() {
 
       {/* Main Content */}
       <main className="max-w-6xl mx-auto px-4 py-8">
-        <Tabs defaultValue={new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '').get('tab') || "upload"} className="space-y-6">
+        <Tabs
+          value={activeTab}
+          onValueChange={(value) => {
+            setActiveTab(value);
+            // Optional: update URL
+             router.push(`/dashboard/teacher?tab=${value}`);
+          }}
+          className="space-y-6"
+        >
           <TabsList className="grid w-full max-w-md grid-cols-3">
             <TabsTrigger value="upload">Upload Materials</TabsTrigger>
             <TabsTrigger value="assessment">Generate Assessment</TabsTrigger>
@@ -573,5 +588,13 @@ export default function TeacherDashboardPage() {
         </Tabs>
       </main>
     </div>
+  );
+}
+
+export default function TeacherDashboardPage() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center min-h-screen"><Loader2 className="h-8 w-8 animate-spin" /></div>}>
+      <TeacherDashboardContent />
+    </Suspense>
   );
 }

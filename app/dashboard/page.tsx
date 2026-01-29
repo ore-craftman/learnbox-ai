@@ -55,7 +55,7 @@ export default function DashboardPage() {
               <p className="text-muted-foreground mb-6">Manage your class materials and assessments</p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-4">
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
               <Card className="cursor-pointer hover:border-primary transition-colors">
                 <CardHeader>
                   <CardTitle className="text-lg">Upload Materials</CardTitle>
@@ -64,7 +64,7 @@ export default function DashboardPage() {
                 <CardContent>
                   <Button
                     className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
-                    onClick={() => router.push('/dashboard/teacher')}
+                    onClick={() => router.push('/dashboard/teacher?tab=upload')}
                   >
                     Upload
                   </Button>
@@ -79,7 +79,7 @@ export default function DashboardPage() {
                 <CardContent>
                   <Button
                     className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
-                    onClick={() => router.push('/dashboard/teacher')}
+                    onClick={() => router.push('/dashboard/teacher?tab=assessment')}
                   >
                     Create
                   </Button>
@@ -98,6 +98,22 @@ export default function DashboardPage() {
                     onClick={() => router.push('/dashboard/teacher?tab=resources')}
                   >
                     Manage
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <Card className="cursor-pointer hover:border-primary transition-colors">
+                <CardHeader>
+                  <CardTitle className="text-lg">View Assessments</CardTitle>
+                  <CardDescription>View generated assessments</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Button
+                    variant="outline"
+                    className="w-full bg-transparent"
+                    onClick={() => router.push('/dashboard/teacher/assessments')}
+                  >
+                    View All
                   </Button>
                 </CardContent>
               </Card>
