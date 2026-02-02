@@ -40,6 +40,7 @@ export async function GET(request: NextRequest) {
         name: u.name,
         email: u.email,
         role: u.role,
+        schoolId: u.schoolId,
         createdAt: u.createdAt,
       })),
     });

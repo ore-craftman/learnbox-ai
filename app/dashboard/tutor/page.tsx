@@ -13,6 +13,8 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Send, Loader2, BarChart3, Mic, Volume2, StopCircle, LogOut } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { initSpeechRecognition, synthesizeSpeech, stopSpeech, pauseSpeech, resumeSpeech, checkVoiceSupport } from '@/lib/voice-utils';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface Message {
   id: string;
@@ -47,6 +49,10 @@ export default function TutorPage() {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [voiceSupport, setVoiceSupport] = useState({ speechRecognition: false, textToSpeech: false });
   const recognitionRef = useRef<any>(null);
+
+  // Audio state
+  const [currentAudioId, setCurrentAudioId] = useState<string | null>(null);
+  const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
     if (!isLoading && !user) {
@@ -184,10 +190,6 @@ export default function TutorPage() {
     }
   };
 
-  // Audio state
-  const [currentAudioId, setCurrentAudioId] = useState<string | null>(null);
-  const [isPaused, setIsPaused] = useState(false);
-
   // ... (speech recognition refs)
 
   const handleAudioControl = async (messageId: string, text: string) => {
@@ -321,11 +323,30 @@ export default function TutorPage() {
                       : 'bg-muted text-foreground'
                   }`}
                 >
-                  <div className="text-sm whitespace-pre-wrap leading-relaxed">
-                    {msg.content.split('**').map((part, i) =>
-                      i % 2 === 1 ? <strong key={i}>{part}</strong> : part
-                    )}
-                  </div>
+                  {msg.type === 'user' ? (
+                    <div className="text-sm whitespace-pre-wrap leading-relaxed">
+                      {msg.content}
+                    </div>
+                  ) : (
+                    <div className="text-sm leading-relaxed markdown-content">
+                      <ReactMarkdown
+                        remarkPlugins={[remarkGfm]}
+                        components={{
+                          h1: ({node, ...props}) => <h1 className="text-base font-semibold mt-3 mb-2" {...props} />,
+                          h2: ({node, ...props}) => <h2 className="text-sm font-semibold mt-3 mb-2" {...props} />,
+                          h3: ({node, ...props}) => <h3 className="text-sm font-semibold mt-2 mb-1" {...props} />,
+                          p: ({node, ...props}) => <p className="my-2" {...props} />,
+                          ul: ({node, ...props}) => <ul className="my-2 ml-4 list-disc" {...props} />,
+                          ol: ({node, ...props}) => <ol className="my-2 ml-4 list-decimal" {...props} />,
+                          li: ({node, ...props}) => <li className="my-1" {...props} />,
+                          strong: ({node, ...props}) => <strong className="font-semibold" {...props} />,
+                          code: ({node, ...props}) => <code className="bg-black/10 dark:bg-white/10 px-1 py-0.5 rounded" {...props} />,
+                        }}
+                      >
+                        {msg.content}
+                      </ReactMarkdown>
+                    </div>
+                  )}
                   {msg.type === 'assistant' && voiceSupport.textToSpeech && (
                     <button
                       onClick={() => handleAudioControl(msg.id, msg.content)}

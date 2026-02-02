@@ -160,7 +160,7 @@ export default function DashboardPage() {
                 </CardContent>
               </Card>
 
-              <Card className="cursor-pointer hover:border-primary transition-colors">
+              {/* <Card className="cursor-pointer hover:border-primary transition-colors">
                 <CardHeader>
                   <CardTitle className="text-lg">View Analytics</CardTitle>
                   <CardDescription>Monitor usage</CardDescription>
@@ -170,7 +170,7 @@ export default function DashboardPage() {
                     View
                   </Button>
                 </CardContent>
-              </Card>
+              </Card> */}
             </div>
           </div>
         );

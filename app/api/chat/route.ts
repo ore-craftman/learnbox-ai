@@ -43,12 +43,12 @@ export async function POST(request: NextRequest) {
       .map((r: any) => `[${r.metadata.title}]\n${r.content}`)
       .join('\n\n');
 
-    // Generate RAG response
+    // Generate RAG response with age-appropriate explanation
     const aiMessage = await generateRagResponse(
       message,
       resourceContext,
       subject,
-      'primary' // Could be dynamic based on class level
+      classId // Use actual class level for age-appropriate responses
     );
 
     // Save chat message to database

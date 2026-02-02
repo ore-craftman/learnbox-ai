@@ -384,6 +384,7 @@ export default function AdminDashboardPage() {
     return null;
   }
 
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-secondary">
       {/* Header */}
@@ -485,7 +486,14 @@ export default function AdminDashboardPage() {
                             <td className="py-3 px-4 text-foreground">{u.name}</td>
                             <td className="py-3 px-4 text-foreground text-sm">{u.email}</td>
                             <td className="py-3 px-4 text-foreground text-sm">
-                              {schools.find(s => s.slug === u.schoolId)?.name || u.schoolId || 'Unknown'}
+                              {u.role === 'admin'
+                                ? 'Default'
+                                : u.schoolId
+                                    ? u.schoolId
+                                        .split('-')
+                                        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+                                        .join(' ')
+                                    : 'Unknown'}
                             </td>
                             <td className="py-3 px-4">
                               <span className={`px-2 py-1 rounded text-xs font-semibold ${
